@@ -25,8 +25,6 @@ public class MortgageDAO {
             JOIN action_taken at ON a.action_taken = at.action_taken
             JOIN location l ON a.location_id = l.location_id
             JOIN msamd m ON a.msamd = m.msamd
-            WHERE a.action_taken = 1 AND 
-            (a.purchaser_type = 0 OR a.purchaser_type = 1 OR a.purchaser_type = 2 OR a.purchaser_type = 3 OR a.purchaser_type = 4 OR a.purchaser_type = 8) 
         """;
         
         // Use FilterManager for Query Building
