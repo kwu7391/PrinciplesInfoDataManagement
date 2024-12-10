@@ -5,30 +5,65 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MortgageDAO {
-    public List<Mortgage> getFilteredMortgages(String query, List<Object> params) {
-        List<Mortgage> mortgages = new ArrayList<>();
-        try (Connection conn = DatabaseConnection.connect();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
 
+    /**
+     * Retrieves filtered mortgages from the database.
+     * Uses dynamic query building and prepared statements.
+     * 
+     * @param filters Active filters provided by FilterManager.
+     * @return List of matching Mortgage records.
+     */
+    public List<Mortgage> getFilteredMortgages(List<Filter> filters) {
+        List<Mortgage> mortgages = new ArrayList<>();
+
+        // Base SQL Query
+        String query = """
+            SELECT a.application_id, a.respondent_id, a.loan_type, a.loan_amount_000s, 
+                   at.action_taken_name, a.action_taken, m.msamd_name, a.msamd, 
+                   l.county_name, a.applicant_income_000s, a.rate_spread, a.purchaser_type, a.lien_status
+            FROM application a
+            JOIN action_taken at ON a.action_taken = at.action_taken
+            JOIN location l ON a.location_id = l.location_id
+            JOIN msamd m ON a.msamd = m.msamd
+        """;
+        
+        // Use FilterManager for Query Building
+        FilterManager filterManager = new FilterManager(filters);
+        String whereClause = filterManager.buildWhereClause();  
+        List<Object> params = filterManager.collectParameters();
+
+        try (Connection conn = DatabaseCon.connect();
+             PreparedStatement stmt = conn.prepareStatement(query + whereClause)) {
+
+            // Inject parameters into the PreparedStatement
             for (int i = 0; i < params.size(); i++) {
                 stmt.setObject(i + 1, params.get(i));
             }
 
+            // Execute Query and Map Results to Mortgage Objects
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 Mortgage mortgage = new Mortgage(
-                    rs.getInt("mortgage_id"),
-                    rs.getDouble("loan_amount"),
-                    rs.getDouble("interest_rate"),
-                    rs.getString("purchaser_type"),
-                    rs.getString("county"),
-                    rs.getString("msamd")
+                    rs.getInt("application_id"),
+                    rs.getString("respondent_id"),
+                    rs.getInt("loan_type"),
+                    rs.getInt("loan_amount_000s"),
+                    rs.getString("action_taken_name"),
+                    rs.getInt("action_taken"),
+                    rs.getString("msamd_name"),
+                    rs.getInt("msamd"),
+                    rs.getString("county_name"),
+                    rs.getInt("applicant_income_000s"),
+                    rs.getDouble("rate_spread"),
+                    rs.getInt("purchaser_type"),
+                    rs.getInt("lien_status") 
                 );
-                mortgages.add(mortgage);
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return mortgages;
     }
 }
