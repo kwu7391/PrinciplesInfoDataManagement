@@ -1,36 +1,41 @@
 package edu.cs213.mortgage;
 
 public class Mortgage {
-    private int applicationId;
+    //private int applicationId;
     private String respondentId;
     private int loanType;
     private int loanAmount;
-    private String actionTakenName;
+    //private String actionTakenName;
     private int actionTaken;
-    private String msamdName;
+    //private String msamdName;
     private int msamd;
-    private String countyName;
+    private int countyCode;
     private int applicantIncome;
     private double rateSpread;      
     private int purchaserType;
     private int lienStatus;
+    private int propertyType;
+    private int loanPurpose;
 
-    public Mortgage(int applicationId, String respondentId, int loanType, int loanAmount,
-                    String actionTakenName, int actionTaken, String msamdName, int msamd,
-                    String countyName, int applicantIncome, double rateSpread, int purchaserType, int lienStatus) {
-        this.applicationId = applicationId;
+    public Mortgage(String respondentId, int loanType, int loanAmount,
+                    int actionTaken, int msamd,
+                    int countyCode, int applicantIncome, double rateSpread, int purchaserType, int lienStatus, 
+                    int propertyType, int loanPurpose) {
+        //this.applicationId = applicationId;
         this.respondentId = respondentId;
         this.loanType = loanType;
         this.loanAmount = loanAmount;
-        this.actionTakenName = actionTakenName;
+        //this.actionTakenName = actionTakenName;
         this.actionTaken = actionTaken;
-        this.msamdName = msamdName;
+        //this.msamdName = msamdName;
         this.msamd = msamd;
-        this.countyName = countyName;
+        this.countyCode = countyCode;
         this.applicantIncome = applicantIncome;
         this.rateSpread = rateSpread;
         this.purchaserType = purchaserType;
         this.lienStatus = lienStatus;
+        this.propertyType = propertyType;
+        this.loanPurpose = loanPurpose;
     }
 
     // Getter for lienStatus
@@ -39,15 +44,15 @@ public class Mortgage {
     }
 
     // Other existing getters (if needed)
-    public int getApplicationId() { return applicationId; }
+    //public int getApplicationId() { return applicationId; }
     public String getRespondentId() { return respondentId; }
     public int getLoanType() { return loanType; }
     public int getLoanAmount() { return loanAmount; }
-    public String getActionTakenName() { return actionTakenName; }
+    //public String getActionTakenName() { return actionTakenName; }
     public int getActionTaken() { return actionTaken; }
-    public String getMsamdName() { return msamdName; }
+    //public String getMsamdName() { return msamdName; }
     public int getMsamd() { return msamd; }
-    public String getCountyName() { return countyName; }
+    public int getCountyCode() { return countyCode; }
     public int getApplicantIncome() { return applicantIncome; }
     public double getRateSpread() { return rateSpread; }
     public int getPurchaserType() { return purchaserType; }
