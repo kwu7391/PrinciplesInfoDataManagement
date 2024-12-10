@@ -31,4 +31,9 @@ public class Filter {
     public List<Object> getParameters() {
         return parameters;
     }
+
+    public String toString()
+    {
+        return name;
+    }
 }
