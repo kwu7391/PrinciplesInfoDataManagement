@@ -7,7 +7,7 @@ import java.util.List;
 public class MortgageDAO {
     public List<Mortgage> getFilteredMortgages(String query, List<Object> params) {
         List<Mortgage> mortgages = new ArrayList<>();
-        try (Connection conn = DatabaseConnection.connect();
+        try (Connection conn = DatabaseCon.connect();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
             for (int i = 0; i < params.size(); i++) {
