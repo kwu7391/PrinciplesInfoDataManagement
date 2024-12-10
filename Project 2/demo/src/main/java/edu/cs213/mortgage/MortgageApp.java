@@ -235,7 +235,7 @@ public class MortgageApp {
             }
             case 5 -> {
                 System.out.println("""
-                        ACCEPTABLE LOAN PURPOSES:
+                        ACCEPTABLE PROPERTY TYPES:
 
                         1.  One-to-four family dwelling (other than manufactured housing)
                         2.  Manufactured housing
