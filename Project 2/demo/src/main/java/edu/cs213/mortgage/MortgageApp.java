@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
+import static java.util.Comparator.comparing;
+
 
 public class MortgageApp {
     private final MortgageDAO mortgageDAO = new MortgageDAO();
@@ -18,15 +20,77 @@ public class MortgageApp {
         boolean running = true;
         while (running) {
             List<Filter> displayFilters = filterManager.getFilters();
-            System.out.println("ACTIVE FILTERS: ");
+            System.out.println("\nACTIVE FILTERS: ");
             if (displayFilters.size() == 0)
             {
                 System.out.println("-\tNone");
             }
+            displayFilters.sort(comparing(Filter::getChoice));
+            StringBuilder display = new StringBuilder("");
             for (int i = 0; i < displayFilters.size(); i++) 
             {
-                System.out.println("-\t" + displayFilters.get(i));
-            }   
+                if (i == 0)
+                {
+                    if (i + 1 < displayFilters.size())
+                    {
+                        if (displayFilters.get(i+1).getChoice() == displayFilters.get(i).getChoice())
+                        {
+                            display.append("(").append(displayFilters.get(i).getName());
+                        }
+                        else
+                        {
+                            display.append(displayFilters.get(i).getName());
+                        }
+                    }
+                    else
+                    {
+                
+                        display.append(displayFilters.get(i).getName());
+                    }
+                }
+                else
+                {
+                    if (displayFilters.get(i).getChoice() == displayFilters.get(i-1).getChoice())
+                    {
+                        if (i + 1 < displayFilters.size())
+                        {
+                            if (displayFilters.get(i+1).getChoice() == displayFilters.get(i).getChoice())
+                            {
+                                display.append(" OR ").append(displayFilters.get(i).getName());
+                            }
+                            else
+                            {
+                                display.append(" OR ").append(displayFilters.get(i).getName()).append(")");
+                            }
+                        }
+                        else
+                        {
+                           
+                            display.append(" OR ").append(displayFilters.get(i).getName()).append(")");
+                        }
+                    }
+                    else
+                    {
+                        if (i + 1 < displayFilters.size())
+                        {
+                            if (displayFilters.get(i+1).getChoice() == displayFilters.get(i).getChoice())
+                            {
+                                display.append(" AND (").append(displayFilters.get(i).getName());
+                            }
+                            else
+                            {
+                                display.append(" AND ").append(displayFilters.get(i).getName());
+                            }
+                        }
+                        else
+                        {
+                            
+                            display.append(" AND ").append(displayFilters.get(i).getName());
+                        }
+                    }
+                }
+            } 
+            System.out.println(display);
             System.out.println("\n--- Mortgage Backed Securities System ---");
             System.out.println("1. Add Filter");
             System.out.println("2. Delete Filter");
@@ -36,6 +100,7 @@ public class MortgageApp {
 
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
+            System.out.println("\n");
             scanner.nextLine();  // Consume newline
 
             switch (choice) {
@@ -55,15 +120,16 @@ public class MortgageApp {
      */
     private void addFilter() {
         System.out.println("Available Filters:");
-        System.out.println("1. MSAMD (ID or Name)");
+        System.out.println("1. MSAMD ");
         System.out.println("2. County Name");
-        System.out.println("3. Loan Type (1-4)");
-        System.out.println("4. Loan Purpose (1-3)");
-        System.out.println("5. Property Type (1-3)");
+        System.out.println("3. Loan Type ");
+        System.out.println("4. Loan Purpose ");
+        System.out.println("5. Property Type ");
         System.out.println("6. Applicant Income Range");
 
         System.out.print("Enter filter number: ");
         int filterChoice = scanner.nextInt();
+        System.out.println("\n");
         scanner.nextLine();  // Consume newline
 
         String filterName, sqlCondition;
@@ -88,54 +154,70 @@ public class MortgageApp {
                         """);
                 System.out.print("Enter choice #: ");
                 int choice = scanner.nextInt();
+                System.out.println("\n");
                 String msamd = "";
+                int msamdVal = 0;
                 switch (choice) 
                 {
                     case 1 -> 
                     {
                         msamd = "Allentown, Bethlehem, Easton - PA, NJ";
+                        msamdVal = 10900;
                     }
                     case 2 -> 
                     {
                         msamd = "Atlantic City, Hammonton - NJ";
-
+                        msamdVal = 12100;
                     }
                     case 3 -> 
                     {
                         msamd = "Camden - NJ";
+                        msamdVal = 15804;
 
                     }
                     case 4 -> 
                     {
                         msamd = "Newark - NJ, PA";
+                        msamdVal = 35084;
+
                     }
                     case 5 -> 
                     {
                         msamd = "New York, Jersey City, White Plains - NY, NJ";
+                        msamdVal = 35614;
+
                     }
                     case 6 -> 
                     {
-                        msamd = "35620";
+                        msamdVal = 35620;
                     }
                     case 7 -> 
                     {
                         msamd = "Ocean City - NJ";
+                        msamdVal = 36140;
+
                     }
                     case 8 -> 
                     {
-                        msamd = "37980";
+                        msamdVal = 37980;
                     }
                     case 9 -> 
                     {
                         msamd = "Trenton - NJ";
+                        msamdVal = 45940;
+
                     }
                     case 10 -> 
                     {
                         msamd = "Vineland, Bridgeton - NJ";
+                        msamdVal = 47220;
+
                     }
                     case 11 -> 
                     {
                         msamd = "Wilmington - DE, MD, NJ";
+                        msamdVal = 48864;
+
                     }    
                     default -> 
                     {
@@ -143,16 +225,165 @@ public class MortgageApp {
                         return;    
                     }
                 }
-                filterName = "MSAMD = " + msamd;
-                sqlCondition = "(a.msamd = ? OR m.msamd_name ILIKE ?)";
+                if (choice == 6 || choice == 8)
+                {
+                    filterName = "MSAMD = " + msamdVal;
+                    sqlCondition = "a.msamd = " + msamdVal;
+                }
+                else
+                {
+                    filterName = "MSAMD = " + msamd;
+                    sqlCondition = "a.msamd = " + msamdVal;
+                }
                 params = List.of(msamd, "%" + msamd + "%");
             }
             case 2 -> {
-                System.out.print("Enter County Name: ");
-                String county = scanner.nextLine();
-                filterName = "County Name";
-                sqlCondition = "l.county_name ILIKE ?";
-                params = List.of("%" + county + "%");
+                System.out.println("""
+                        ACCEPTABLE COUNTIES:
+
+                        1. Atlantic County
+                        2. Bergen County
+                        3. Burlington County
+                        4. Camden County
+                        5. Cape May County
+                        6. Cumberland County
+                        7. Essex County
+                        8. Gloucester County
+                        9. Hudson County
+                        10. Hunterdon County
+                        11. Mercer County
+                        12. Middlesex County
+                        13. Monmouth County
+                        14. Morris County
+                        15. Ocean County
+                        16. Passaic County
+                        17. Salem County
+                        18. Somerset County
+                        19. Sussex County
+                        20. Union County
+                        21. Warren County
+                        """);
+                System.out.print("Enter choice #: ");
+                int choice = scanner.nextInt();
+                System.out.println("\n");
+                String county = "";
+                int code = 0;
+                switch (choice) 
+                {
+                    case 1 -> 
+                    {
+                        county = "Atlantic County";
+                        code = 1;
+                    }
+                    case 2 -> 
+                    {
+                        county = "Bergen County";
+                        code = 3;
+                    }
+                    case 3 -> 
+                    {
+                        county = "Burlington County";
+                        code = 5;
+                    }
+                    case 4 -> 
+                    {
+                        county = "Camden County";
+                        code = 7;
+                    }
+                    case 5 -> 
+                    {
+                        county = "Cape May County";
+                        code = 9;
+                    }
+                    case 6 -> 
+                    {
+                        county = "Cumberland County";
+                        code = 11;
+                    }
+                    case 7 -> 
+                    {
+                        county = "Essex County";
+                        code = 13;
+                    }
+                    case 8 -> 
+                    {
+                        county = "Gloucester County";
+                        code = 15;
+                    }
+                    case 9 -> 
+                    {
+                        county = "Hudson County";
+                        code = 17;
+                    }
+                    case 10 -> 
+                    {
+                        county = "Hunterdon County";
+                        code = 19;
+                    }
+                    case 11 -> 
+                    {
+                        county = "Mercer County";
+                        code = 21;
+                    }    
+                    case 12 -> 
+                    {
+                        county = "Middlesex County";
+                        code = 23;
+                    }  
+                    case 13 -> 
+                    {
+                        county = "Monmouth County";
+                        code = 25;
+                    }  
+                    case 14 -> 
+                    {
+                        county = "Morris County";
+                        code = 27;
+                    }  
+                    case 15 -> 
+                    {
+                        county = "Ocean County";
+                        code = 29;
+                    }  
+                    case 16 -> 
+                    {
+                        county = "Passaic County";
+                        code = 31;
+                    }  
+                    case 17 -> 
+                    {
+                        county = "Salem County";
+                        code = 33;
+                    }  
+                    case 18 -> 
+                    {
+                        county = "Somerset County";
+                        code = 35;
+                    }  
+                    case 19 -> 
+                    {
+                        county = "Sussex County";
+                        code = 37;
+                    }  
+                    case 20 -> 
+                    {
+                        county = "Union County";
+                        code = 39;
+                    }  
+                    case 21 -> 
+                    {
+                        county = "Warren County";
+                        code = 41;
+                    }  
+                    default -> 
+                    {
+                        System.out.println("Invalid choice.");
+                        return;    
+                    }
+                }
+                filterName = "County = " + county;
+                sqlCondition = "a.county_code = " + code;
+                params = List.of("%" + code + "%");
             }
             case 3 -> {
                 System.out.println("""
@@ -165,6 +396,7 @@ public class MortgageApp {
                         """);
                 System.out.print("Enter choice #: ");
                 int choice = scanner.nextInt();
+                System.out.println("\n");
                 String loanType = "";
                 switch (choice) 
                 {
@@ -193,7 +425,7 @@ public class MortgageApp {
                     }
                 }
                 filterName = "Loan Type = " + loanType;
-                sqlCondition = "a.loan_type = ?";
+                sqlCondition = "a.loan_type = " + choice;
                 params = List.of(choice);
             }
             case 4 -> {
@@ -206,6 +438,7 @@ public class MortgageApp {
                         """);
                 System.out.print("Enter choice #: ");
                 int choice = scanner.nextInt();
+                System.out.println("\n");
                 String loanPurpose = "";
                 switch (choice) 
                 {
@@ -230,12 +463,12 @@ public class MortgageApp {
                     }
                 }
                 filterName = "Loan Purpose = " + loanPurpose;
-                sqlCondition = "a.loan_purpose = ?";
+                sqlCondition = "a.loan_purpose = " + choice;
                 params = List.of(choice);
             }
             case 5 -> {
                 System.out.println("""
-                        ACCEPTABLE LOAN PURPOSES:
+                        ACCEPTABLE PROPERTY TYPES:
 
                         1.  One-to-four family dwelling (other than manufactured housing)
                         2.  Manufactured housing
@@ -243,6 +476,7 @@ public class MortgageApp {
                         """);
                 System.out.print("Enter choice #: ");
                 int choice = scanner.nextInt();
+                System.out.println("\n");
                 String propertyType = "";
                 switch (choice) 
                 {
@@ -267,7 +501,7 @@ public class MortgageApp {
                     }
                 }
                 filterName = "Property Type = " + propertyType;
-                sqlCondition = "a.property_type = ?";
+                sqlCondition = "a.property_type = " + choice;
                 params = List.of(choice);
             }
             case 6 -> {
@@ -276,7 +510,7 @@ public class MortgageApp {
                 System.out.print("Enter Maximum Applicant Income: ");
                 int maxIncome = scanner.nextInt();
                 filterName = "Applicant Income Range: " + minIncome + " - " + maxIncome;
-                sqlCondition = "a.applicant_income_000s BETWEEN ? AND ?";
+                sqlCondition = "(a.applicant_income_000s BETWEEN " + minIncome + " AND " + maxIncome + ")";
                 params = List.of(minIncome, maxIncome);
             }
             default -> {
@@ -285,8 +519,9 @@ public class MortgageApp {
             }
         }
 
-        filterManager.addFilter(new Filter(filterName, sqlCondition, params));
+        filterManager.addFilter(new Filter(filterName, sqlCondition, params, filterChoice));
         System.out.println("Filter added: " + filterName);
+        System.out.println("\n");
     }
 
     /**
@@ -353,6 +588,7 @@ public class MortgageApp {
         String response = scanner.nextLine().trim().toLowerCase();
 
         if ("yes".equals(response)) {
+            /* 
             try (Connection conn = DatabaseCon.connect()) {
                 String updateQuery = "UPDATE application SET purchaser_type = 9 WHERE application_id = ?";
                 try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
@@ -368,6 +604,7 @@ public class MortgageApp {
             }
         } else {
             System.out.println("Rate rejected. Returning to the main menu.");
+            */
         }
     }
 }
