@@ -17,6 +17,16 @@ public class MortgageApp {
     public void run() {
         boolean running = true;
         while (running) {
+            List<Filter> displayFilters = filterManager.getFilters();
+            System.out.println("ACTIVE FILTERS: ");
+            if (displayFilters.size() == 0)
+            {
+                System.out.println("-\tNone");
+            }
+            for (int i = 0; i < displayFilters.size(); i++) 
+            {
+                System.out.println("-\t" + displayFilters.get(i));
+            }   
             System.out.println("\n--- Mortgage Backed Securities System ---");
             System.out.println("1. Add Filter");
             System.out.println("2. Delete Filter");
@@ -61,9 +71,79 @@ public class MortgageApp {
 
         switch (filterChoice) {
             case 1 -> {
-                System.out.print("Enter MSAMD (ID or Name): ");
-                String msamd = scanner.nextLine();
-                filterName = "MSAMD";
+                System.out.println("""
+                        ACCEPTABLE MSAMDs:
+
+                        1.  Allentown, Bethlehem, Easton - PA, NJ
+                        2.  Atlantic City, Hammonton - NJ
+                        3.  Camden - NJ
+                        4.  Newark - NJ, PA
+                        5.  New York, Jersey City, White Plains - NY, NJ
+                        6.  35620
+                        7.  Ocean City - NJ
+                        8.  37980
+                        9.  Trenton - NJ
+                        10. Vineland, Bridgeton - NJ
+                        11. Wilmington - DE, MD, NJ
+                        """);
+                System.out.print("Enter choice #: ");
+                int choice = scanner.nextInt();
+                String msamd = "";
+                switch (choice) 
+                {
+                    case 1 -> 
+                    {
+                        msamd = "Allentown, Bethlehem, Easton - PA, NJ";
+                    }
+                    case 2 -> 
+                    {
+                        msamd = "Atlantic City, Hammonton - NJ";
+
+                    }
+                    case 3 -> 
+                    {
+                        msamd = "Camden - NJ";
+
+                    }
+                    case 4 -> 
+                    {
+                        msamd = "Newark - NJ, PA";
+                    }
+                    case 5 -> 
+                    {
+                        msamd = "New York, Jersey City, White Plains - NY, NJ";
+                    }
+                    case 6 -> 
+                    {
+                        msamd = "35620";
+                    }
+                    case 7 -> 
+                    {
+                        msamd = "Ocean City - NJ";
+                    }
+                    case 8 -> 
+                    {
+                        msamd = "37980";
+                    }
+                    case 9 -> 
+                    {
+                        msamd = "Trenton - NJ";
+                    }
+                    case 10 -> 
+                    {
+                        msamd = "Vineland, Bridgeton - NJ";
+                    }
+                    case 11 -> 
+                    {
+                        msamd = "Wilmington - DE, MD, NJ";
+                    }    
+                    default -> 
+                    {
+                        System.out.println("Invalid choice.");
+                        return;    
+                    }
+                }
+                filterName = "MSAMD = " + msamd;
                 sqlCondition = "(a.msamd = ? OR m.msamd_name ILIKE ?)";
                 params = List.of(msamd, "%" + msamd + "%");
             }
@@ -75,32 +155,127 @@ public class MortgageApp {
                 params = List.of("%" + county + "%");
             }
             case 3 -> {
-                System.out.print("Enter Loan Type (1-4): ");
-                int loanType = scanner.nextInt();
-                filterName = "Loan Type";
+                System.out.println("""
+                        ACCEPTABLE LOAN TYPES:
+
+                        1.  Conventional
+                        2.  FHA-insured
+                        3.  VA-guaranteed
+                        4.  FSA/RHS-guaranteed
+                        """);
+                System.out.print("Enter choice #: ");
+                int choice = scanner.nextInt();
+                String loanType = "";
+                switch (choice) 
+                {
+                    case 1 -> 
+                    {
+                        loanType = "Conventional";
+                    }
+                    case 2 -> 
+                    {
+                        loanType = "FHA-insured";
+
+                    }
+                    case 3 -> 
+                    {
+                        loanType = "VA-guaranteed";
+
+                    }
+                    case 4 -> 
+                    {
+                        loanType = "FSA/RHS-guaranteed";
+                    }
+                    default -> 
+                    {
+                        System.out.println("Invalid choice.");
+                        return;    
+                    }
+                }
+                filterName = "Loan Type = " + loanType;
                 sqlCondition = "a.loan_type = ?";
-                params = List.of(loanType);
+                params = List.of(choice);
             }
             case 4 -> {
-                System.out.print("Enter Loan Purpose (1-3): ");
-                int loanPurpose = scanner.nextInt();
-                filterName = "Loan Purpose";
+                System.out.println("""
+                        ACCEPTABLE LOAN PURPOSES:
+
+                        1.  Home purchase
+                        2.  Home improvement
+                        3.  Refinancing
+                        """);
+                System.out.print("Enter choice #: ");
+                int choice = scanner.nextInt();
+                String loanPurpose = "";
+                switch (choice) 
+                {
+                    case 1 -> 
+                    {
+                        loanPurpose = "Home purchase";
+                    }
+                    case 2 -> 
+                    {
+                        loanPurpose = "Home improvement";
+
+                    }
+                    case 3 -> 
+                    {
+                        loanPurpose = "Refinancing";
+
+                    }
+                    default -> 
+                    {
+                        System.out.println("Invalid choice.");
+                        return;    
+                    }
+                }
+                filterName = "Loan Purpose = " + loanPurpose;
                 sqlCondition = "a.loan_purpose = ?";
-                params = List.of(loanPurpose);
+                params = List.of(choice);
             }
             case 5 -> {
-                System.out.print("Enter Property Type (1-3): ");
-                int propertyType = scanner.nextInt();
-                filterName = "Property Type";
+                System.out.println("""
+                        ACCEPTABLE LOAN PURPOSES:
+
+                        1.  One-to-four family dwelling (other than manufactured housing)
+                        2.  Manufactured housing
+                        3.  Multifamily dwelling
+                        """);
+                System.out.print("Enter choice #: ");
+                int choice = scanner.nextInt();
+                String propertyType = "";
+                switch (choice) 
+                {
+                    case 1 -> 
+                    {
+                        propertyType = "One-to-four family dwelling (other than manufactured housing)";
+                    }
+                    case 2 -> 
+                    {
+                        propertyType = "Manufactured housing";
+
+                    }
+                    case 3 -> 
+                    {
+                        propertyType = "Multifamily dwelling";
+
+                    }
+                    default -> 
+                    {
+                        System.out.println("Invalid choice.");
+                        return;    
+                    }
+                }
+                filterName = "Property Type = " + propertyType;
                 sqlCondition = "a.property_type = ?";
-                params = List.of(propertyType);
+                params = List.of(choice);
             }
             case 6 -> {
                 System.out.print("Enter Minimum Applicant Income: ");
                 int minIncome = scanner.nextInt();
                 System.out.print("Enter Maximum Applicant Income: ");
                 int maxIncome = scanner.nextInt();
-                filterName = "Applicant Income Range";
+                filterName = "Applicant Income Range: " + minIncome + " - " + maxIncome;
                 sqlCondition = "a.applicant_income_000s BETWEEN ? AND ?";
                 params = List.of(minIncome, maxIncome);
             }
