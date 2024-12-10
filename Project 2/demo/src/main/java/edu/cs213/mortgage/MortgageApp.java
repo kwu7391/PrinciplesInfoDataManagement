@@ -12,12 +12,12 @@ public class MortgageApp {
     private final MortgageDAO mortgageDAO = new MortgageDAO();
     private final FilterManager filterManager = new FilterManager();
     private final Scanner scanner = new Scanner(System.in);
+    private boolean running = true;
 
     /**
      * Main Program Execution Loop
      */
     public void run() {
-        boolean running = true;
         while (running) {
             List<Filter> displayFilters = filterManager.getFilters();
             System.out.println("\nACTIVE FILTERS: ");
@@ -121,11 +121,11 @@ public class MortgageApp {
     private void addFilter() {
         System.out.println("Available Filters:");
         System.out.println("1. MSAMD ");
-        System.out.println("2. County Name");
-        System.out.println("3. Loan Type ");
-        System.out.println("4. Loan Purpose ");
-        System.out.println("5. Property Type ");
-        System.out.println("6. Applicant Income Range");
+        //System.out.println("2. County Name");
+        System.out.println("2. Loan Type ");
+        System.out.println("3. Loan Purpose ");
+        System.out.println("4. Property Type ");
+        System.out.println("5. Applicant Income Range");
 
         System.out.print("Enter filter number: ");
         int filterChoice = scanner.nextInt();
@@ -237,6 +237,7 @@ public class MortgageApp {
                 }
                 params = List.of(msamd, "%" + msamd + "%");
             }
+            /* 
             case 2 -> {
                 System.out.println("""
                         ACCEPTABLE COUNTIES:
@@ -385,7 +386,8 @@ public class MortgageApp {
                 sqlCondition = "a.county_code = " + code;
                 params = List.of("%" + code + "%");
             }
-            case 3 -> {
+                */
+            case 2 -> {
                 System.out.println("""
                         ACCEPTABLE LOAN TYPES:
 
@@ -428,7 +430,7 @@ public class MortgageApp {
                 sqlCondition = "a.loan_type = " + choice;
                 params = List.of(choice);
             }
-            case 4 -> {
+            case 3 -> {
                 System.out.println("""
                         ACCEPTABLE LOAN PURPOSES:
 
@@ -466,7 +468,7 @@ public class MortgageApp {
                 sqlCondition = "a.loan_purpose = " + choice;
                 params = List.of(choice);
             }
-            case 5 -> {
+            case 4 -> {
                 System.out.println("""
                         ACCEPTABLE PROPERTY TYPES:
 
@@ -504,7 +506,7 @@ public class MortgageApp {
                 sqlCondition = "a.property_type = " + choice;
                 params = List.of(choice);
             }
-            case 6 -> {
+            case 5 -> {
                 System.out.print("Enter Minimum Applicant Income: ");
                 int minIncome = scanner.nextInt();
                 System.out.print("Enter Maximum Applicant Income: ");
@@ -588,15 +590,15 @@ public class MortgageApp {
         String response = scanner.nextLine().trim().toLowerCase();
 
         if ("yes".equals(response)) {
-            /* 
             try (Connection conn = DatabaseCon.connect()) {
-                String updateQuery = "UPDATE application SET purchaser_type = 9 WHERE application_id = ?";
+                String updateQuery = "UPDATE application SET purchaser_type = 5 WHERE application_id = ?";
                 try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
                     for (Mortgage mortgage : mortgages) {
                         stmt.setInt(1, mortgage.getApplicationId());
                         stmt.executeUpdate();
                     }
                     System.out.println("Mortgages successfully packaged!");
+                    running = false;
                 }
             } catch (SQLException e) {
                 System.out.println("Error packaging mortgages.");
@@ -604,7 +606,6 @@ public class MortgageApp {
             }
         } else {
             System.out.println("Rate rejected. Returning to the main menu.");
-            */
         }
     }
 }
