@@ -51,8 +51,8 @@ public class MortgageApp {
         System.out.println("3. Loan Type (1-4)");
         System.out.println("4. Loan Purpose (1-3)");
         System.out.println("5. Property Type (1-3)");
-        System.out.println("6. Applicant Income Range (Minimum & Maximum)");
-        System.out.println("7. Tract to MSAMD Income (Minimum & Maximum)"); // Extra Credit
+        System.out.println("6. Applicant Income Range (Min & Max)");
+        System.out.println("7. Tract to MSAMD Income (Min & Max)");
     
         System.out.print("Enter filter number: ");
         int filterChoice = scanner.nextInt();
@@ -110,13 +110,13 @@ public class MortgageApp {
             }
             case 7 -> {
                 System.out.print("Enter Minimum Tract to MSAMD Income: ");
-                double minIncome = scanner.nextDouble();
+                double minTractIncome = scanner.nextDouble();
                 System.out.print("Enter Maximum Tract to MSAMD Income: ");
-                double maxIncome = scanner.nextDouble();
+                double maxTractIncome = scanner.nextDouble();
                 filterName = "Tract to MSAMD Income";
                 sqlCondition = "l.tract_to_msamd_income BETWEEN ? AND ?";
-                params.add(minIncome);
-                params.add(maxIncome);
+                params.add(minTractIncome);
+                params.add(maxTractIncome);
             }
             default -> {
                 System.out.println("Invalid filter choice.");
@@ -124,7 +124,7 @@ public class MortgageApp {
             }
         }
     
-        // Add the filter
+        // Add filter to FilterManager
         filterManager.addFilter(new Filter(filterName, sqlCondition, params));
         System.out.println("Filter added successfully.");
     }    
