@@ -25,7 +25,7 @@ public class MortgageCalculator {
             weightedSum += finalRate * loanAmount;
             totalLoanAmount += loanAmount;
         }
-
+        System.out.printf("Total Loan Amount: $%.2f%n", totalLoanAmount * 1000);
         return totalLoanAmount > 0 ? weightedSum / totalLoanAmount : BASE_RATE;
     }
 
