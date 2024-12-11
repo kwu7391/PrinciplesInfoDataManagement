@@ -14,6 +14,6 @@ function RateDisplay({ rate, loanCount, totalAmount }) {
       <p><strong>Calculated Expected Rate:</strong> {rate.toFixed(2)}%</p>
     </div>
   );
-}
+}   
 
 export default RateDisplay;

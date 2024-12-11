@@ -1,6 +1,6 @@
 // src/App.jsx
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Search from "./pages/Search";
 import LoanPackager from "./components/LoanPackager";
@@ -12,9 +12,15 @@ function App() {
         <header>
           <h1>Mortgage Backed Securities System</h1>
           <nav>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/search">Search Mortgages</Link>
-            <Link to="/package">Loan Packaging</Link>
+            <NavLink to="/dashboard" activeClassName="active-link">
+              Dashboard
+            </NavLink>
+            <NavLink to="/search" activeClassName="active-link">
+              Search Mortgages
+            </NavLink>
+            <NavLink to="/package" activeClassName="active-link">
+              Loan Packaging
+            </NavLink>
           </nav>
         </header>
 
