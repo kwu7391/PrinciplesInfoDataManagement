@@ -2,6 +2,8 @@ package edu.cs213.mortgage;
 
 import java.util.ArrayList;
 import java.util.List;
+import static java.util.Comparator.comparing;
+
 
 public class FilterManager {
     private final List<Filter> filters;
@@ -44,10 +46,68 @@ public class FilterManager {
                 "WHERE a.action_taken = 1 AND a.purchaser_type IN (0, 1, 2, 3, 4, 8)"
         );
 
-        for (Filter filter : filters) {
-            whereClause.append(" AND ").append(filter.getSqlCondition());
-        }
+        filters.sort(comparing(Filter::getChoice));
 
+        for (int i = 0; i < filters.size(); i++) 
+        {
+            if (i == 0)
+            {
+                if (i + 1 < filters.size())
+                {
+                    if (filters.get(i+1).getChoice() == filters.get(i).getChoice())
+                    {
+                        whereClause.append(" AND (").append(filters.get(i).getSqlCondition());
+                    }
+                    else
+                    {
+                        whereClause.append(" AND ").append(filters.get(i).getSqlCondition());
+                    }
+                }
+                else
+                {
+                    whereClause.append(" AND ").append(filters.get(i).getSqlCondition());
+                }
+            }
+            else
+            {
+                if (filters.get(i).getChoice() == filters.get(i-1).getChoice())
+                {
+                    if (i + 1 < filters.size())
+                    {
+                        if (filters.get(i+1).getChoice() == filters.get(i).getChoice())
+                        {
+                            whereClause.append(" OR ").append(filters.get(i).getSqlCondition());
+                        }
+                        else
+                        {
+                            whereClause.append(" OR ").append(filters.get(i).getSqlCondition()).append(")");
+                        }
+                    }
+                    else
+                    {
+                        whereClause.append(" OR ").append(filters.get(i).getSqlCondition()).append(")");
+                    }
+                }
+                else
+                {
+                    if (i + 1 < filters.size())
+                    {
+                        if (filters.get(i+1).getChoice() == filters.get(i).getChoice())
+                        {
+                            whereClause.append(" AND (").append(filters.get(i).getSqlCondition());
+                        }
+                        else
+                        {
+                            whereClause.append(" AND ").append(filters.get(i).getSqlCondition());
+                        }
+                    }
+                    else
+                    {
+                        whereClause.append(" AND ").append(filters.get(i).getSqlCondition());
+                    }
+                }
+            }
+        }
         return whereClause.toString();
     }
 
