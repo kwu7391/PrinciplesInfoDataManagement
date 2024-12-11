@@ -109,18 +109,5 @@ public class FilterManager {
             }
         }
         return whereClause.toString();
-    }
-
-    /**
-     * Collects all filter parameters in order.
-     * Used for safely injecting parameters into PreparedStatement.
-     * @return A list of filter parameter values.
-     */
-    public List<Object> collectParameters() {
-        List<Object> parameters = new ArrayList<>();
-        for (Filter filter : filters) {
-            parameters.addAll(filter.getParameters());
-        }
-        return parameters;
-    }
+    }   
 }
