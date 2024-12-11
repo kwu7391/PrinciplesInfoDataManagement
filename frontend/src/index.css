@@ -1,0 +1,112 @@
+/* Reset CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body & General Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  color: #333;
+  text-align: center;
+  min-height: 100vh;
+}
+
+/* Main App Container */
+.app-container {
+  max-width: 900px;
+  margin: 50px auto;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2, h3, h4 {
+  margin: 20px 0;
+}
+
+/* Header Styles */
+header {
+  margin-bottom: 30px;
+}
+
+header h1 {
+  font-size: 2rem;
+  color: #2c3e50;
+}
+
+header nav {
+  margin: 20px 0;
+}
+
+header nav a {
+  text-decoration: none;
+  color: #3498db;
+  font-size: 1.2rem;
+  margin: 0 15px;
+}
+
+header nav a:hover {
+  color: #2c3e50;
+}
+
+/* Centering Content */
+.dashboard, .loan-packager, .search-page {
+  text-align: center;
+}
+
+/* Form Styles */
+.filter-form {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.filter-form input, .filter-form button {
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filter-form button {
+  background: #3498db;
+  color: white;
+  cursor: pointer;
+}
+
+.filter-form button:hover {
+  background: #2c3e50;
+}
+
+/* Table Styles */
+.mortgage-results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px auto;
+}
+
+.mortgage-results-table th, .mortgage-results-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.mortgage-results-table th {
+  background: #3498db;
+  color: white;
+}
+
+.mortgage-results-table td {
+  text-align: center;
+}
+
+/* Status Messages */
+.status-message {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  color: #27ae60;
+}
