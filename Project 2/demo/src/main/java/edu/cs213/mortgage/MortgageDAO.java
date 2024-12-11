@@ -18,11 +18,11 @@ public class MortgageDAO {
 
         // Base SQL Query
         String query = """
-            SELECT a.respondent_id, a.loan_type, a.loan_amount_000s, 
+            SELECT a.application_id, a.respondent_id, a.loan_type, a.loan_amount_000s, 
                     a.action_taken, a.msamd, 
-                   a.county_code, a.applicant_income_000s, a.rate_spread, a.purchaser_type, 
+                    a.applicant_income_000s, a.rate_spread, a.purchaser_type, 
                    a.lien_status, a.property_type, a.loan_purpose
-            FROM preliminary a
+            FROM application a
         """;
         //            JOIN location l ON a.location_id = l.location_id
         //            JOIN action_taken at ON a.action_taken = at.action_taken
@@ -42,15 +42,17 @@ public class MortgageDAO {
             //}
 
             // Execute Query and Map Results to Mortgage Objects
+            System.out.println("SELECT COUNT(*) FROM (" + query + " " + whereClause + ");");
             ResultSet rs = stmt.executeQuery(query + " " + whereClause);
             while (rs.next()) {
                 Mortgage mortgage = new Mortgage(
+                    rs.getInt("application_id"),
                     rs.getString("respondent_id"),
                     rs.getInt("loan_type"),
                     rs.getInt("loan_amount_000s"),
                     rs.getInt("action_taken"),
                     rs.getInt("msamd"),
-                    rs.getInt("county_code"),
+                    //rs.getInt("county_code"),
                     rs.getInt("applicant_income_000s"),
                     rs.getDouble("rate_spread"),
                     rs.getInt("purchaser_type"),
